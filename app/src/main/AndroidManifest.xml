@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pravin.lede.gl.myapplication">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,6 +13,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.SelectActiviesActivity"></activity>
         <activity android:name=".activities.UserActivitiesActivity" >
+        </activity>
+        <activity android:name=".activities.UserActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +22,6 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".activities.UserActivity" />
         <activity android:name=".activities.MainActivity">
             </activity>
     </application>

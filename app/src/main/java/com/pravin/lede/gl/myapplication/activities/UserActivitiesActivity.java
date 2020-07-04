@@ -7,17 +7,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pravin.lede.gl.myapplication.R;
+import com.pravin.lede.gl.myapplication.interfaces.ItemSelectionListener;
 import com.pravin.lede.gl.myapplication.models.ActivityItems;
 import com.pravin.lede.gl.myapplication.models.ActivityModel;
 import com.pravin.lede.gl.myapplication.adapter.ActivitiesAdapter;
 
 import java.util.ArrayList;
 
-public class UserActivitiesActivity extends AppCompatActivity {
+public class UserActivitiesActivity extends AppCompatActivity implements ItemSelectionListener {
     RecyclerView recyclerView;
     LinearLayout linearLayout;
+    ArrayList<String> strings=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,15 @@ public class UserActivitiesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.myRecyclerView);
         linearLayout = findViewById(R.id.icon_status);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerView.setAdapter(new ActivitiesAdapter(getActivities()));
+        recyclerView.setAdapter(new ActivitiesAdapter(getActivities(), this));
+    }
+
+    private void addItem(String itemText){
+        TextView textView=new TextView(this);
+        textView.setText(itemText);
+        textView.setPadding(5,5,5,5);
+        linearLayout.addView(textView);
+
     }
 
     private ArrayList<ActivityModel> getActivities() {
@@ -58,5 +70,19 @@ public class UserActivitiesActivity extends AppCompatActivity {
         activityModels.add(new ActivityModel(activityItemsZero, "Special"));
 
         return activityModels;
+    }
+
+
+    @Override
+    public void onItemAdd(String item) {
+
+        if (strings.contains(item))
+        {
+            Toast.makeText(this," Item Already Exist", Toast.LENGTH_LONG).show();
+        }
+        else{
+            addItem(item);
+            strings.add(item);
+        }
     }
 }

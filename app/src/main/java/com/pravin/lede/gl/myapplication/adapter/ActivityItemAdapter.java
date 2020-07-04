@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pravin.lede.gl.myapplication.R;
+import com.pravin.lede.gl.myapplication.interfaces.ItemSelectionListener;
 import com.pravin.lede.gl.myapplication.models.ActivityItems;
 
 import java.util.ArrayList;
@@ -17,10 +18,13 @@ import java.util.ArrayList;
 public class ActivityItemAdapter extends RecyclerView.Adapter<ActivityItemAdapter.MyHolder> {
 
     ArrayList<ActivityItems> activityItems = new ArrayList<>();
+    ItemSelectionListener itemSelectionListener;
 
-    public ActivityItemAdapter(ArrayList<ActivityItems> activityItems) {
+    public ActivityItemAdapter(ArrayList<ActivityItems> activityItems, ItemSelectionListener itemSelectionListener) {
         this.activityItems = activityItems;
+        this.itemSelectionListener = itemSelectionListener;
     }
+
 
     @NonNull
     @Override
@@ -30,13 +34,13 @@ public class ActivityItemAdapter extends RecyclerView.Adapter<ActivityItemAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         holder.imageView.setImageResource(activityItems.get(position).getImage());
         holder.textView.setText(activityItems.get(position).getItem());
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                itemSelectionListener.onItemAdd(activityItems.get(position).getItem());
             }
         });
     }

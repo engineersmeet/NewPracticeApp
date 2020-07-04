@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pravin.lede.gl.myapplication.R;
+import com.pravin.lede.gl.myapplication.interfaces.ItemSelectionListener;
 import com.pravin.lede.gl.myapplication.models.ActivityModel;
 
 import java.util.ArrayList;
@@ -19,11 +20,13 @@ import java.util.ArrayList;
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.MyHolder> {
 
     ArrayList<ActivityModel> activityModels = new ArrayList<>();
+    ItemSelectionListener itemSelectionListener;
     Context context;
     private View imageView;
 
-    public ActivitiesAdapter(ArrayList<ActivityModel> activityModels) {
+    public ActivitiesAdapter(ArrayList<ActivityModel> activityModels, ItemSelectionListener itemSelectionListener) {
         this.activityModels = activityModels;
+        this.itemSelectionListener= itemSelectionListener;
     }
 
     @NonNull
@@ -40,9 +43,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
         ActivityModel model = activityModels.get(position);
 
         holder.textView.setText(model.getGroupTitle());
-        holder.activityItemRecyclerView.setAdapter(new ActivityItemAdapter(model.getActivityItems()));
-
-
+        holder.activityItemRecyclerView.setAdapter(new ActivityItemAdapter(model.getActivityItems(), itemSelectionListener));
 
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +51,7 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.My
             public void onClick(View v) {
                 if (holder.imageView.getTag().equals("visible")) {
                     holder.activityItemRecyclerView.setVisibility(View.GONE);
-                   holder.imageView.setTag("GONE");
+                    holder.imageView.setTag("GONE");
                     holder.imageView.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                 } else {
                     holder.activityItemRecyclerView.setVisibility(View.VISIBLE);
