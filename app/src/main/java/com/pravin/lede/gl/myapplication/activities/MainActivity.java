@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.pravin.lede.gl.myapplication.MyApplication;
 import com.pravin.lede.gl.myapplication.R;
 import com.pravin.lede.gl.myapplication.adapter.MyAdapter;
 import com.pravin.lede.gl.myapplication.models.Info;
@@ -28,16 +29,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.myRecyclerView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        recyclerView.setAdapter(new MyAdapter(getData()));
+        recyclerView.setAdapter(new MyAdapter(MyApplication.getSingletonObject().getSelectedFoodOrderList()));
     }
 
-    ArrayList<Info> getData(){
-
-        ArrayList<Info> info = new ArrayList<>();
-        info.add(new Info("Sonali", "20 May"));
-        info.add(new Info("Priyanka", "7 sep"));
-        info.add(new Info("Pravin", "7 sep"));
-
-        return info;
-    }
 }
