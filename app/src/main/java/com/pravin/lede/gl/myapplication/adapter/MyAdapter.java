@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +49,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
 
         Picasso.get().load(orderModel.getFoodModel().getFoodImage()).into(holder.foodImage);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                strings.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+    }
+
+    public void updateAdapter(ArrayList<FoodOrderModel> strings){
+        this.strings = strings;
+        notifyDataSetChanged();
     }
 
     @Override

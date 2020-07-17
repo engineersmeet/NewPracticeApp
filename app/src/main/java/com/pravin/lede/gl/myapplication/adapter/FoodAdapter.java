@@ -94,6 +94,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyHolder> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         return foodModels.size();
     }
@@ -106,7 +111,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyHolder> {
         TextView foodCost;
         TextView foodAddOrder;
         ImageView foodImage;
-
         TextView foodAddOne;
         TextView foodMinusOne;
         TextView foodCount;
@@ -120,7 +124,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyHolder> {
             foodCost = itemView.findViewById(R.id.food_cost);
             foodAddOrder = itemView.findViewById(R.id.food_add);
             foodImage = itemView.findViewById(R.id.food_image);
-
             foodAddOne = itemView.findViewById(R.id.food_add_one);
             foodMinusOne = itemView.findViewById(R.id.food_minus_one);
             foodCount = itemView.findViewById(R.id.food_count);

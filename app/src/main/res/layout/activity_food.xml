@@ -6,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.FoodActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/food_recycler"
+    <FrameLayout
+        android:id="@+id/fragment_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="9">
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </FrameLayout>
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,16 +22,28 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/place_order_button"
+            android:id="@+id/my_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/add_order_button_background"
             android:textColor="@color/colorWhite"
-            android:text="Place Order"
+            android:text="My Cart"
             android:padding="10dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/add_order_button_background"
+            android:textColor="@color/colorWhite"
+            android:text="Home"
+            android:padding="10dp"
+            android:layout_toLeftOf="@+id/my_cart"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"/>
+
 
         <TextView
             android:id="@+id/place_order_info"

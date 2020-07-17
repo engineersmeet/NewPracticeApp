@@ -5,38 +5,28 @@ import android.content.res.Configuration;
 
 import androidx.annotation.NonNull;
 
+import com.pravin.lede.gl.myapplication.interfaces.CalculatePrice;
 import com.pravin.lede.gl.myapplication.models.FoodOrderModel;
 
 import java.util.ArrayList;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyApplication extends Application {
 
     private static MyApplication myApplication = null;
     private ArrayList<FoodOrderModel> selectedFoodOrderList = new ArrayList<>();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    CalculatePrice calculatePrice;
+
+    public Retrofit getRetrofitObject(){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://prointellects.com/welcome/").addConverterFactory(GsonConverterFactory.create()).build();
+        return retrofit;
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
-
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
+    public void setCalculatePriceListener(CalculatePrice calculatePrice) {
+        this.calculatePrice = calculatePrice;
     }
 
     public MyApplication() {
@@ -63,6 +53,14 @@ public class MyApplication extends Application {
         selectedFoodOrderList.clear();
     }
 
+    public void calculateLatestCost(){
+        int totalCost = 0;
+        for (FoodOrderModel orderModel : MyApplication.getSingletonObject().getSelectedFoodOrderList()) {
+            totalCost += orderModel.getFoodCost() * orderModel.getFoodCount();
+        }
+        calculatePrice.onCostChanged(String.format("Rs. %s", String.valueOf(totalCost)));
+    }
+
     private int isItemPresent(FoodOrderModel foodOrderModel) {
         for (int i = 0; i < selectedFoodOrderList.size(); i++) {
             if (selectedFoodOrderList.get(i).getFoodId() == foodOrderModel.getFoodId()) {
@@ -75,6 +73,31 @@ public class MyApplication extends Application {
 
     public ArrayList<FoodOrderModel> getSelectedFoodOrderList() {
         return selectedFoodOrderList;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
     }
 
 }

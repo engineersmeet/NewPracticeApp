@@ -1,18 +1,24 @@
 package com.pravin.lede.gl.myapplication.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pravin.lede.gl.myapplication.MyApplication;
 import com.pravin.lede.gl.myapplication.R;
 import com.pravin.lede.gl.myapplication.adapter.FoodAdapter;
+import com.pravin.lede.gl.myapplication.fragments.MyCartFragment;
+import com.pravin.lede.gl.myapplication.fragments.SelectOrdersFragment;
+import com.pravin.lede.gl.myapplication.interfaces.CalculatePrice;
 import com.pravin.lede.gl.myapplication.interfaces.FoodInterface;
 import com.pravin.lede.gl.myapplication.interfaces.FoodOrderListener;
 import com.pravin.lede.gl.myapplication.models.FoodModel;
@@ -27,57 +33,84 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class FoodActivity extends AppCompatActivity implements FoodOrderListener {
-    RecyclerView recyclerView;
-
-    Retrofit retrofit;
-    FoodInterface foodInterface;
+public class FoodActivity extends AppCompatActivity implements CalculatePrice {
+    FrameLayout frameLayout;
 
     TextView placeOrderTextView;
     TextView placeOrderInfoTextView;
+    TextView homeTextView;
+
+    SelectOrdersFragment selectOrdersFragment;
+    MyCartFragment myCartFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food);
 
-        recyclerView = findViewById(R.id.food_recycler);
-        placeOrderTextView = findViewById(R.id.place_order_button);
+        init();
+        settingFragment();
+        setOnClickListener();
+
+    }
+
+    private void settingFragment() {
+
+        selectOrdersFragment = new SelectOrdersFragment();
+        myCartFragment = new MyCartFragment();
+
+        //Add both the frags
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_layout, selectOrdersFragment)
+                .add(R.id.fragment_layout, myCartFragment).commit();
+        displayFragment(true);
+
+        MyApplication.getSingletonObject().setCalculatePriceListener(this);
+    }
+
+    private void init() {
+
+        frameLayout = findViewById(R.id.fragment_layout);
+        placeOrderTextView = findViewById(R.id.my_cart);
         placeOrderInfoTextView = findViewById(R.id.place_order_info);
+        homeTextView = findViewById(R.id.home);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        retrofit = new Retrofit.Builder().baseUrl("https://prointellects.com/welcome/").addConverterFactory(GsonConverterFactory.create()).build();
-        foodInterface = retrofit.create(FoodInterface.class);
-
-        Call<List<FoodModel>> call = foodInterface.get_food();
-        call.enqueue(new Callback<List<FoodModel>>() {
-            @Override
-            public void onResponse(Call<List<FoodModel>> call, Response<List<FoodModel>> response) {
-                ArrayList<FoodModel> foodModelArrayList = (ArrayList<FoodModel>) response.body();
-                recyclerView.setAdapter(new FoodAdapter(foodModelArrayList, FoodActivity.this));
-                Toast.makeText(FoodActivity.this, "Success", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<List<FoodModel>> call, Throwable t) {
-                Toast.makeText(FoodActivity.this, "Failure", Toast.LENGTH_LONG).show();
-            }
-        });
+    private void setOnClickListener() {
 
         placeOrderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                displayFragment(false);
+                myCartFragment.updateCartAdapter();
+            }
+        });
 
-            Intent intent = new Intent(FoodActivity.this,MainActivity.class);
-            startActivity(intent);
-               // placeMyOrder();
+        homeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFragment(true);
             }
         });
 
     }
 
+    private void displayFragment(boolean isHomeFragmentVisible){
+
+       if(isHomeFragmentVisible){
+           getSupportFragmentManager().beginTransaction().show(selectOrdersFragment).commit();
+           getSupportFragmentManager().beginTransaction().hide(myCartFragment).commit();
+       }else {
+           getSupportFragmentManager().beginTransaction().show(myCartFragment).commit();
+           getSupportFragmentManager().beginTransaction().hide(selectOrdersFragment).commit();
+       }
+
+    }
+
+
     private void placeMyOrder() {
+
+        FoodInterface foodInterface = MyApplication.getSingletonObject().getRetrofitObject().create(FoodInterface.class);
 
         Call<String> stringCall = foodInterface.placeOrder(MyApplication.getSingletonObject().getSelectedFoodOrderList());
 
@@ -94,20 +127,9 @@ public class FoodActivity extends AppCompatActivity implements FoodOrderListener
         });
     }
 
+
     @Override
-    public void onOrderPlaced(FoodOrderModel foodOrderModel) {
-        int totalCost = 0;
-        MyApplication.getSingletonObject().addOrRemoveItems(foodOrderModel);
-        for (FoodOrderModel orderModel : MyApplication.getSingletonObject().getSelectedFoodOrderList()) {
-            totalCost += orderModel.getFoodCost() * orderModel.getFoodCount();
-        }
-        placeOrderInfoTextView.setText(String.format("Rs. %s", String.valueOf(totalCost)));
-
-
-        // placeMyOrder(foodOrderModel);
-
-
+    public void onCostChanged(String latestCost) {
+        placeOrderInfoTextView.setText(latestCost);
     }
-
-
 }
