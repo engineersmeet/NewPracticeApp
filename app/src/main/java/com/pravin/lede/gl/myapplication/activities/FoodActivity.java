@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.pravin.lede.gl.myapplication.MyApplication;
 import com.pravin.lede.gl.myapplication.R;
 import com.pravin.lede.gl.myapplication.adapter.FoodAdapter;
+import com.pravin.lede.gl.myapplication.enm.FragmentType;
+import com.pravin.lede.gl.myapplication.fragments.MapFragment;
 import com.pravin.lede.gl.myapplication.fragments.MyCartFragment;
 import com.pravin.lede.gl.myapplication.fragments.SelectOrdersFragment;
 import com.pravin.lede.gl.myapplication.interfaces.CalculatePrice;
@@ -39,9 +41,11 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
     TextView placeOrderTextView;
     TextView placeOrderInfoTextView;
     TextView homeTextView;
+    TextView mapTextView;
 
     SelectOrdersFragment selectOrdersFragment;
     MyCartFragment myCartFragment;
+    MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +62,12 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
 
         selectOrdersFragment = new SelectOrdersFragment();
         myCartFragment = new MyCartFragment();
+        mapFragment = new MapFragment();
 
         //Add both the frags
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_layout, selectOrdersFragment)
-                .add(R.id.fragment_layout, myCartFragment).commit();
-        displayFragment(true);
+                .add(R.id.fragment_layout, myCartFragment).add(R.id.fragment_layout, mapFragment).commit();
+        displayFragment(FragmentType.HOME);
 
         MyApplication.getSingletonObject().setCalculatePriceListener(this);
     }
@@ -73,6 +78,7 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
         placeOrderTextView = findViewById(R.id.my_cart);
         placeOrderInfoTextView = findViewById(R.id.place_order_info);
         homeTextView = findViewById(R.id.home);
+        mapTextView = findViewById(R.id.map);
 
     }
 
@@ -81,7 +87,7 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
         placeOrderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayFragment(false);
+                displayFragment(FragmentType.CART);
                 myCartFragment.updateCartAdapter();
             }
         });
@@ -89,21 +95,38 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
         homeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayFragment(true);
+                displayFragment(FragmentType.HOME);
+            }
+        });
+
+        mapTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayFragment(FragmentType.MAP);
             }
         });
 
     }
 
-    private void displayFragment(boolean isHomeFragmentVisible){
+    private void displayFragment(FragmentType type) {
 
-       if(isHomeFragmentVisible){
-           getSupportFragmentManager().beginTransaction().show(selectOrdersFragment).commit();
-           getSupportFragmentManager().beginTransaction().hide(myCartFragment).commit();
-       }else {
-           getSupportFragmentManager().beginTransaction().show(myCartFragment).commit();
-           getSupportFragmentManager().beginTransaction().hide(selectOrdersFragment).commit();
-       }
+        switch (type){
+            case HOME:
+                getSupportFragmentManager().beginTransaction().show(selectOrdersFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(myCartFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(mapFragment).commit();
+                break;
+            case CART:
+                getSupportFragmentManager().beginTransaction().show(myCartFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(selectOrdersFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(mapFragment).commit();
+                break;
+            case MAP:
+                getSupportFragmentManager().beginTransaction().show(mapFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(selectOrdersFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(myCartFragment).commit();
+                break;
+        }
 
     }
 

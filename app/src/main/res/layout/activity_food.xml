@@ -28,9 +28,9 @@
             android:background="@drawable/add_order_button_background"
             android:textColor="@color/colorWhite"
             android:text="My Cart"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:layout_toLeftOf="@+id/map"
             android:layout_margin="10dp"/>
         <TextView
             android:id="@+id/home"
@@ -40,7 +40,17 @@
             android:textColor="@color/colorWhite"
             android:text="Home"
             android:padding="10dp"
-            android:layout_toLeftOf="@+id/my_cart"
+            android:layout_toLeftOf="@+id/my_cart" android:layout_centerVertical="true"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/add_order_button_background"
+            android:textColor="@color/colorWhite"
+            android:text="Map"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"/>
 
