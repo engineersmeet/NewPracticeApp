@@ -46,6 +46,7 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
     SelectOrdersFragment selectOrdersFragment;
     MyCartFragment myCartFragment;
     MapFragment mapFragment;
+    private TextView drawLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
         placeOrderInfoTextView = findViewById(R.id.place_order_info);
         homeTextView = findViewById(R.id.home);
         mapTextView = findViewById(R.id.map);
+        drawLocation = findViewById(R.id.draw_location);
 
     }
 
@@ -103,6 +105,13 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
             @Override
             public void onClick(View v) {
                 displayFragment(FragmentType.MAP);
+            }
+        });
+
+        drawLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapFragment.drawLocations();
             }
         });
 

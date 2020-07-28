@@ -7,10 +7,14 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -18,16 +22,25 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.pravin.lede.gl.myapplication.R;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements LocationListener {
 
     private GoogleMap mMap;
     private LocationManager mLocationManager;
+    private ArrayList<LatLng> storedLocationsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +68,49 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            LatLng sydney = new LatLng(21.085861,79.98888);
-            setLocationWithMarker(sydney);
+            LatLng positionOne = new LatLng(21.085861, 79.98888);
+            setLocationWithMarker(positionOne);
         }
     };
 
+    ArrayList<LatLng> savedLocationsList = new ArrayList<>();
+
     private void setLocationWithMarker(LatLng latLng) {
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Sydney"));
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(18.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(12.0f));
-        mMap.addCircle(new CircleOptions().center(latLng).radius(200).fillColor(R.color.cardview_dark_background));
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Sydney"));
+                mMap.addMarker(new MarkerOptions().position(latLng).title("My Current Location"));
+                mMap.addCircle(new CircleOptions().center(latLng).radius(500).strokeWidth(0.0f).fillColor(R.color.colorLightBlue));
+                savedLocationsList.add(latLng);
+                showLocations(500, latLng);
             }
         });
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+    }
+
+    private void showLocations(int meters, LatLng currentLatLng){
+        for(LatLng latLng: savedLocationsList){
+            if(getDistance(latLng, currentLatLng) <= meters){
+                mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                mMap.addPolyline(new PolylineOptions().width(5.0f).add(latLng, currentLatLng).color(Color.BLUE));
+            }
+        }
+    }
+
+    private double getDistance(LatLng latLng1, LatLng latLng2){
+        Location loc1 = new Location("");
+        loc1.setLatitude(latLng1.latitude);
+        loc1.setLongitude(latLng1.longitude);
+
+        Location loc2 = new Location("");
+        loc2.setLatitude(latLng2.latitude);
+        loc2.setLongitude(latLng2.longitude);
+
+        return loc1.distanceTo(loc2);
     }
 
     @Override
@@ -88,10 +126,8 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            if (location.getAccuracy() > 30.0f) {
-                LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-                setLocationWithMarker(sydney);
-            }
+            LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+            //setLocationWithMarker(sydney);
         }
     }
 
@@ -109,4 +145,6 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     public void onProviderDisabled(String provider) {
 
     }
+
+
 }
