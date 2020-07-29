@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -17,10 +15,10 @@ public class MyDatabase extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Location_db";
 
     public static final String TABLE_NAME = "location";
-    public static final String COL_1 = "id";
-    public static final String COL_2 = "date";
-    public static final String COL_3 = "lat";
-    public static final String COL_4 = "lng";
+    public static final String COL_1 = "id";    // 0
+    public static final String COL_2 = "date";  // 1
+    public static final String COL_3 = "lat";      //2
+    public static final String COL_4 = "lng";   //3
 
 
     public MyDatabase(Context context, int version) {
@@ -56,6 +54,7 @@ public class MyDatabase extends SQLiteOpenHelper {
 
     public boolean insertLocation(double latitude, double longitude, String date){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2, date);
         contentValues.put(COL_3, String.valueOf(latitude));

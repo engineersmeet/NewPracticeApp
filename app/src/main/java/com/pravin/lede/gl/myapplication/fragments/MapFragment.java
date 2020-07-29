@@ -46,6 +46,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private GoogleMap mMap;
     private LocationManager locationManager;
     private MyDatabase myDatabase;
+    private LatLng previousLocation;
 
     public MapFragment() {
         // Required empty public constructor
@@ -96,13 +97,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location != null && location.getAccuracy() > 10.0f) {
+        if (location != null && location.getAccuracy() > 10) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(22.0f));
             Date date = new Date();
-            myDatabase.insertLocation(location.getLatitude(), location.getLongitude(), date.toString());
+            if (previousLocation != null && previousLocation.latitude != latLng.latitude && previousLocation.longitude != latLng.longitude) {
+                myDatabase.insertLocation(location.getLatitude(), location.getLongitude(), date.toString());
+            }
+            previousLocation = latLng;
         }
     }
 
@@ -126,7 +129,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         LatLng previousLocation = arrayList.get(0);
         for (LatLng latLng : arrayList) {
             mMap.addPolyline(new PolylineOptions().color(Color.BLACK).width(5.0f).add(previousLocation, latLng));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(previousLocation));
             previousLocation = latLng;
         }
     }
