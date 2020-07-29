@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.pravin.lede.gl.myapplication.R;
@@ -80,7 +81,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 2, this);
         }
     }
 
@@ -88,6 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         checkAndRequestLocation();
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style));
         // Add a marker in Sydney and move the camera
         LatLng sakoli = new LatLng(21.085861, 79.98888);
         mMap.addMarker(new MarkerOptions().position(sakoli).title("Marker in Sakoli"));
@@ -97,7 +99,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location != null && location.getAccuracy() > 10) {
+        Toast.makeText(getActivity(), "Location changed", Toast.LENGTH_SHORT).show();
+        if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -126,10 +129,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     public void drawLocations() {
         ArrayList<LatLng> arrayList = myDatabase.getAllLocation();
-        LatLng previousLocation = arrayList.get(0);
-        for (LatLng latLng : arrayList) {
-            mMap.addPolyline(new PolylineOptions().color(Color.BLACK).width(5.0f).add(previousLocation, latLng));
-            previousLocation = latLng;
+        if(arrayList.size()!=0){
+            LatLng previousLocation = arrayList.get(0);
+            for (LatLng latLng : arrayList) {
+                mMap.addPolyline(new PolylineOptions().color(Color.BLACK).width(5.0f).add(previousLocation, latLng));
+                previousLocation = latLng;
+            }
         }
     }
 }

@@ -75,11 +75,14 @@ public class MyDatabase extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery("select * from "+ TABLE_NAME, null);
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
-            LatLng latLng = new LatLng(Double.parseDouble(cursor.getString(2)), Double.parseDouble(cursor.getString(3)));
-            getAllLocation.add(latLng);
+        if (cursor.moveToFirst()) {
+            do {
+                LatLng latLng = new LatLng(Double.parseDouble(cursor.getString(2)), Double.parseDouble(cursor.getString(3)));
+                getAllLocation.add(latLng);
+            } while (cursor.moveToNext());
         }
+
+        cursor.close();
 
         return getAllLocation;
     }
