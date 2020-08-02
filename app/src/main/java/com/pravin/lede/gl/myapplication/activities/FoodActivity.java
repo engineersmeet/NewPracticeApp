@@ -25,6 +25,7 @@ import com.pravin.lede.gl.myapplication.interfaces.FoodInterface;
 import com.pravin.lede.gl.myapplication.interfaces.FoodOrderListener;
 import com.pravin.lede.gl.myapplication.models.FoodModel;
 import com.pravin.lede.gl.myapplication.models.FoodOrderModel;
+import com.pravin.lede.gl.myapplication.utils.MyDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +48,18 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
     MyCartFragment myCartFragment;
     MapFragment mapFragment;
     private TextView drawLocation;
+    MyDatabase myDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food);
-
+        MyDatabase myDatabase=new MyDatabase(this,2);
+        myDatabase.DeleteLocations();
         init();
         settingFragment();
         setOnClickListener();
+
 
     }
 
