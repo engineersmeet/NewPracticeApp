@@ -44,7 +44,7 @@ public class SelectActiviesActivity extends AppCompatActivity {
             activityItems.add(new ActivityItems(R.drawable.ic_adjust_black_24dp, "Adjust"));
             activityItems.add(new ActivityItems(R.drawable.ic_arrow_upward_black_24dp, "Upward"));
             activityItems.add(new ActivityItems(R.drawable.ic_beach_access_black_24dp, "Beach"));
-            activityItems.add(new ActivityItems(R.drawable.ic_check_circle_black_24dp, "Circle"));
+            activityItems.add(new ActivityItems(R.drawable.ic_check_circle_black, "Circle"));
 
             activityModels.add(new ActivityModel(activityItems, "General"));
         }

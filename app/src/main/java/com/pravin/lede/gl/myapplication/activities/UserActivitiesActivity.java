@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +54,7 @@ public class UserActivitiesActivity extends AppCompatActivity implements ItemSel
         activityItemsZero.add(new ActivityItems(R.drawable.ic_adjust_black_24dp, "Adjust"));
         activityItemsZero.add(new ActivityItems(R.drawable.ic_arrow_upward_black_24dp, "Upward"));
         activityItemsZero.add(new ActivityItems(R.drawable.ic_beach_access_black_24dp, "Beach"));
-        activityItemsZero.add(new ActivityItems(R.drawable.ic_check_circle_black_24dp, "Circle"));
+        activityItemsZero.add(new ActivityItems(R.drawable.ic_check_circle_black, "Circle"));
 
         activityModels.add(new ActivityModel(activityItemsZero, "General"));
 
