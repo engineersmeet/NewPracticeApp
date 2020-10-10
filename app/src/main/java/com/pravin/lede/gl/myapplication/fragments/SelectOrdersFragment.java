@@ -17,6 +17,8 @@ import com.pravin.lede.gl.myapplication.MyApplication;
 import com.pravin.lede.gl.myapplication.R;
 import com.pravin.lede.gl.myapplication.activities.FoodActivity;
 import com.pravin.lede.gl.myapplication.adapter.FoodAdapter;
+import com.pravin.lede.gl.myapplication.controllers.ISelectOrderController;
+import com.pravin.lede.gl.myapplication.controllers.SelectOrderController;
 import com.pravin.lede.gl.myapplication.interfaces.FoodInterface;
 import com.pravin.lede.gl.myapplication.interfaces.FoodOrderListener;
 import com.pravin.lede.gl.myapplication.models.FoodModel;
@@ -37,6 +39,8 @@ public class SelectOrdersFragment extends Fragment implements FoodOrderListener 
     RecyclerView recyclerView;
 
     private static SelectOrdersFragment selectOrdersFragment = null;
+
+    ISelectOrderController iSelectOrderController;
 
     public static SelectOrdersFragment getSelectOrdersFragment() {
         if (selectOrdersFragment == null) {
@@ -72,7 +76,7 @@ public class SelectOrdersFragment extends Fragment implements FoodOrderListener 
                              Bundle savedInstanceState) {
 
         Log.d("Fragment Activity", "Fragment Home Creating");
-
+        iSelectOrderController = new SelectOrderController();
         View view = inflater.inflate(R.layout.fragment_select_orders, container, false);
         recyclerView = view.findViewById(R.id.food_recycler);
         setAdapter();
@@ -81,28 +85,7 @@ public class SelectOrdersFragment extends Fragment implements FoodOrderListener 
 
     public void setAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        callSelectOrderService();
-    }
-
-    public void callSelectOrderService() {
-
-        FoodInterface foodInterface = MyApplication.getSingletonObject().getRetrofitObject().create(FoodInterface.class);
-
-        Call<List<FoodModel>> call = foodInterface.get_food();
-
-        call.enqueue(new Callback<List<FoodModel>>() {
-            @Override
-            public void onResponse(Call<List<FoodModel>> call, Response<List<FoodModel>> response) {
-                ArrayList<FoodModel> foodModelArrayList = (ArrayList<FoodModel>) response.body();
-                recyclerView.setAdapter(new FoodAdapter(foodModelArrayList, SelectOrdersFragment.this));
-                Toast.makeText(getActivity(), "Success", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<List<FoodModel>> call, Throwable t) {
-                Toast.makeText(getActivity(), "Failure", Toast.LENGTH_LONG).show();
-            }
-        });
+        recyclerView.setAdapter(new FoodAdapter(iSelectOrderController.getSelectOrderList(), SelectOrdersFragment.this));
     }
 
     @Override

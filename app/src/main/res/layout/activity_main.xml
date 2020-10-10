@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+  <com.pravin.lede.gl.myapplication.customView.SnakeGameCustomView
+      android:id="@+id/snakeOne"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:snackSpeed="3"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

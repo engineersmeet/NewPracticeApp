@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularImageView">
+
+    </declare-styleable>
+
+    <declare-styleable name="QuestionAnsCustomView">
+        <attr name="Question" format="string"/>
+        <attr name="OptionOne" format="string"/>
+        <attr name="OptionTwo" format="string"/>
+        <attr name="OptionThree" format="string"/>
+        <attr name="OptionFour" format="string"/>
+        <attr name="OriginalAnswer" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SnakeGameCustomView">
+        <attr name="snakeWidth" format="dimension"/>
+        <attr name="snakeColor" format="color"/>
+        <attr name="snackSpeed" format="integer"/>
+    </declare-styleable>
+</resources>

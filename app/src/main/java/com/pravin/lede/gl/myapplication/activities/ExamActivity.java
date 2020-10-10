@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pravin.lede.gl.myapplication.R;
+import com.pravin.lede.gl.myapplication.customView.CircularImageView;
+import com.pravin.lede.gl.myapplication.customView.QuestionAnsCustomView;
 import com.pravin.lede.gl.myapplication.models.QuestionDataModel;
 import com.pravin.lede.gl.myapplication.utils.QuestionDb;
 
@@ -17,11 +20,8 @@ import java.util.ArrayList;
 
 public class ExamActivity extends AppCompatActivity {
 
-    TextView question;
-    TextView opt1;
-    TextView opt2;
-    TextView opt3;
-    TextView opt4;
+    CircularImageView circularImageView;
+    QuestionAnsCustomView questionAnsCustomView;
 
     TextView result;
     TextView nextTextView;
@@ -41,12 +41,12 @@ public class ExamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exam);
 
         init();
-        setOnClickListener();
-        checkAndInsertQuestionData();
-
-        questionDataModels = questionDb.getAllQuestion();
-        ansList = new String[questionDataModels.size()];
-        updateQuestion();
+//        setOnClickListener();
+//        checkAndInsertQuestionData();
+//
+//        questionDataModels = questionDb.getAllQuestion();
+//        ansList = new String[questionDataModels.size()];
+//        updateQuestion();
 
     }
 
@@ -54,7 +54,7 @@ public class ExamActivity extends AppCompatActivity {
 
         if (questionDb.getAllQuestion().size() == 0) {
 
-            questionDb.insertQuestionData(new QuestionDataModel("Who is the CM of Maharashtra?",
+            questionDb.insertQuestionData(new QuestionDataModel("Who is the PM of Maharashtra?",
                     "Devendra Fadanvis",
                     "Ajit Pawar",
                     "Uddhav Thakare",
@@ -94,17 +94,20 @@ public class ExamActivity extends AppCompatActivity {
 
     private void init() {
         questionDb = new QuestionDb(this, 1);
-        question = findViewById(R.id.question);
-        opt1 = findViewById(R.id.opt1);
-        opt2 = findViewById(R.id.opt2);
-        opt3 = findViewById(R.id.opt3);
-        opt4 = findViewById(R.id.opt4);
+
         result = findViewById(R.id.result);
         previousTextView = findViewById(R.id.previous);
         nextTextView = findViewById(R.id.next);
+
+        circularImageView = findViewById(R.id.image);
+        circularImageView.setImageResource(R.drawable.parrot);
+
+        questionAnsCustomView = findViewById(R.id.qacv);
+
     }
 
     private void setOnClickListener() {
+
         nextTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +123,7 @@ public class ExamActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
     }
 
     private void updateQuestion() {
@@ -128,12 +132,7 @@ public class ExamActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     QuestionDataModel model = questionDataModels.get(nextQue);
-                    setSelectedOptionsUnselect();
-                    question.setText(model.getQuetion());
-                    setTextToTextView(model.getOpt1(), model.getAnswer(), opt1);
-                    setTextToTextView(model.getOpt2(), model.getAnswer(), opt2);
-                    setTextToTextView(model.getOpt3(), model.getAnswer(), opt3);
-                    setTextToTextView(model.getOpt4(), model.getAnswer(), opt4);
+
                     setNextQuestionDisable();
                     setPreviousQuestionDisable();
                 }
@@ -187,13 +186,6 @@ public class ExamActivity extends AppCompatActivity {
         if (isPreviewMode && text.equals(ansList[nextQue])) {
             textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_green, 0, 0, 0);
         }
-    }
-
-    private void setSelectedOptionsUnselect() {
-        opt3.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black, 0, 0, 0);
-        opt2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black, 0, 0, 0);
-        opt1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black, 0, 0, 0);
-        opt4.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black, 0, 0, 0);
     }
 
     private void showDialog(String message) {

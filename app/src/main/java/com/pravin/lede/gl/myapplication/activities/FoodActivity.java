@@ -54,7 +54,7 @@ public class FoodActivity extends AppCompatActivity implements CalculatePrice {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food);
-        MyDatabase myDatabase=new MyDatabase(this,2);
+        MyDatabase myDatabase = new MyDatabase(this, 2);
         myDatabase.DeleteLocations();
         init();
         settingFragment();

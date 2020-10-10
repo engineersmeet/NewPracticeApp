@@ -6,4 +6,8 @@
     <color name="colorWhite">#FAF6F7</color>
     <color name="colortBlack">#12D5E7FF</color>
     <color name="colorLightBlue">#00BCD4</color>
+
+
+    <color name="colorPrimaryStyle1">#9C27B0</color>
+    <color name="colorPrimaryDarkStyle1">#681077</color>
 </resources>

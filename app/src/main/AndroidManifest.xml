@@ -18,12 +18,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ExamActivity">
+        <activity android:name=".activities.MVCActivity">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ExamActivity"
+            android:theme="@style/MyStyle"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -39,15 +43,14 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="Map"></activity>
-        <activity android:name=".activities.FoodActivity">
-
-        </activity>
+        <activity android:name=".activities.FoodActivity"></activity>
         <activity android:name=".activities.SelectActiviesActivity" />
         <activity android:name=".activities.UserActivitiesActivity" />
         <activity android:name=".activities.UserActivity" />
         <activity
             android:name=".activities.MainActivity"
-            android:label="Selected Orders" />
+            android:label="Selected Orders">
+        </activity>
     </application>
 
 </manifest>
